@@ -39,6 +39,9 @@
     </div>
 
     <div class="container-md mt-3">
+      <div class="row" style="justify-content:center" v-show="isResultDone==true && AA_rows==0 && AC_rows==0">
+        <div class="col">查無資料</div>
+      </div>
       <div class="accordion" role="tablist" v-show="AA_rows>0 || AC_rows>0">
         <b-card no-body class="mb-1">
           <b-card-header header-tag="header" class="p-1" role="tab">
@@ -136,6 +139,7 @@ export default {
       txtkw: '',
       text_tips: '',
       perPage: 10,
+      isResultDone: false,
       AC_currentPage: 1,
       AA_currentPage: 1,
       AC_rows: 0,
@@ -214,6 +218,7 @@ export default {
         self.$bvToast.show('my-toast')
         return
       }
+      self.isResultDone = false
       self.isLoading = true
       self.AA_results = []
       self.AC_results = []
@@ -232,6 +237,7 @@ export default {
         self.AC_rows = self.AC_results.length
         setTimeout(() => {
           self.isLoading = false
+          self.isResultDone = true
         }, 200)
       })
     },

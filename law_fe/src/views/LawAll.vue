@@ -51,8 +51,21 @@
   <div class="lawall">
     <div class="container-fluid pt-4 pb-4 tqe_header">
     <div style="height:38px;">
-      <input type="text" name="txtkw" id="txtkw" class="txt-tqe" size="50" placeholder="請輸入關鍵字" v-model.trim="txtkw" @keyup.enter="search_query()" />
-      <input type="button" name="btnQuery" id="btnQuery" value="  查詢  " class="btn btn-tqe" style="height:100%" v-on:click="search_query()" />
+      <div class="row" style="justify-content:center">
+        <div class="col-10">
+          <input type="text" name="txtkw" id="txtkw" class="txt-tqe w-25" placeholder="請輸入關鍵字" v-model.trim="txtkw" @keyup.enter="search_query()" />
+          <input type="button" name="btnQuery" id="btnQuery" value="  查詢  " class="btn btn-tqe" style="height:100%" v-on:click="search_query()" />
+        </div>
+      </div>
+      <!-- <div class="row" style="justify-content:center">
+        <div class="col-3">
+        <ul v-show="isOpen" class="list-group mb-3" style="margin-left:-12px">
+            <li v-for="(result, i) in kw_results" :key="i" class="list-group-item text-left" style="z-index:99" @click="select_list(result.AA004)">
+                {{ result.AA004 }}
+            </li>
+        </ul>
+        </div>
+      </div> -->
     </div>
     </div>
     <div class="container mt-3" v-if="TYPE == 'head'">
