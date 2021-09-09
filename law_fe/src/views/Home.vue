@@ -247,6 +247,9 @@ export default {
       this.$router.push({ name: 'LawAll', params: { AA002: AC003, kw: self.txtkw, TYPE: TYPE } })
     },
     format_date (d) {
+      if (d === '99991231') {
+        return '未定'
+      }
       const tempDate = d - 19110000
       let year = null
       let month = null

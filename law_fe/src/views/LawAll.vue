@@ -20,6 +20,12 @@
     font-weight: bold;
     margin-top:-4px;
   }
+  .btn-second-tqe{
+    background-color: #148383;
+    color:#FFF;
+    font-weight: bold;
+    margin-top:-4px;
+  }
   .txt-tqe{
     font-size: 16px;
     height: 100%;
@@ -68,6 +74,7 @@
       </div> -->
     </div>
     </div>
+    <!-- 所有條文 -->
     <div class="container mt-3" v-if="TYPE == 'head'">
       <div class="text-left fs-3">
         所有條文
@@ -94,8 +101,15 @@
             <div class="col text-left">{{AA006}}</div>
           </div>
         </div>
+        <div class="row">
+          <div class="col">
+          <b-button variant="btn btn-second-tqe mr-4" @click="query_law_ac()">所有條文</b-button>
+          <b-button variant="btn btn-second-tqe mr-4" @click="query_law_ab()">編章節</b-button>
+          </div>
+        </div>
       </div>
-      <b-card class="mb-4 law-reg">
+      <!-- 底部身資料 預設 -->
+      <b-card class="mb-4 law-reg" v-if="OP_TYPE == ''">
           <b-card-text v-for="(item,key) in results" :key="key">
             <div class="row mb-2" :class="setChapterClass(item.AB005)" v-if="item.AB005.length>0">
               <div class="col text-left fs-4">
@@ -108,7 +122,20 @@
             </div>
           </b-card-text>
       </b-card>
+      <!-- 底部身資料 點選編章節 -->
+      <b-card class="mb-4 law-reg" v-if="OP_TYPE == '編章節'">
+          <a :href="'https://law.moj.gov.tw/LawClass/LawAllPara.aspx?pcode=' + this.$route.params.AA002" target="_blank">官網</a>
+          <b-card-text v-for="(item,key) in AB_LIST" :key="key">
+            <div class="row ml-4">
+              <div class="col text-left fs-4">
+              <pre><b-link href="javascript:void(0)" style="text-decoration:none" @click="query_detail_by_AB003(item.AB003,item.hasDetail,item.numStart,item.numEnd)">{{item.AB003}} -- {{item.AB005}} § {{item.numStart}}</b-link></pre>
+              </div>
+            </div>
+          </b-card-text>
+      </b-card>
+
     </div>
+    <!-- 條文檢索結果 -->
     <div class="container mt-3" v-else-if="TYPE == 'body'">
       <div class="text-left fs-3">
         條文檢索結果
@@ -133,6 +160,7 @@
           </div>
         </div>
       </div>
+      <!-- 底部身資料 -->
       <div class="card mb-4 law-reg">
         <div class="card-body">
           <div class="row mb-3" v-for="(item,key) in results" :key="key" >
@@ -161,6 +189,8 @@ export default {
       results: [],
       baseURL: GLOBAL.baseURL,
       TYPE: '',
+      OP_TYPE: '',
+      AB_LIST: [],
       AA002: '',
       AA004: '',
       AA006: '',
@@ -184,7 +214,7 @@ export default {
     },
     query_head () {
       const self = this
-      axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: 'law_aa_query', AA002: this.$route.params.AA002 } }).then(function (response) {
+      axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: 'query_law_aa', AA002: this.$route.params.AA002 } }).then(function (response) {
         const res = response.data
         self.AA004 = res[0].AA004
         self.AA006 = res[0].AA006
@@ -193,10 +223,44 @@ export default {
         self.AA009 = res[0].AA009
       })
     },
+    query_law_ab () {
+      const self = this
+      self.AB_LIST = []
+      const apiName = 'query_law_ab'
+      self.OP_TYPE = '編章節'
+      self.isLoading = true
+      axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: this.$route.params.AA002 } }).then(function (response) {
+        console.log(response.data)
+        self.AB_LIST = response.data
+        setTimeout(() => {
+          self.isLoading = false
+        }, 500)
+      })
+    },
+    query_law_ac () {
+      const self = this
+      self.OP_TYPE = ''
+      self.query_detail()
+    },
+    query_detail_by_AB003 (AB003, hasDetail, numStart, numEnd) {
+      const self = this
+      self.OP_TYPE = ''
+      self.isLoading = true
+      const apiName = 'query_detail_by_AB003'
+      axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AB003, hasDetail, numStart, numEnd } }).then(function (response) {
+        console.log(response.data)
+        self.results = response.data
+        setTimeout(() => {
+          self.isLoading = false
+        }, 500)
+      })
+    },
     query_detail () {
       const self = this
+      self.results = []
+      self.isLoading = true
       if (self.$route.params.TYPE === 'head') {
-        const apiName = 'law_ac_query_all'
+        const apiName = 'query_law_ac_all'
         axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AC011: self.$route.params.kw } }).then(function (response) {
           console.log(response.data)
           self.results = response.data
@@ -205,7 +269,7 @@ export default {
           }, 500)
         })
       } else if (self.$route.params.TYPE === 'body') {
-        const apiName = 'law_ac_query_single'
+        const apiName = 'query_law_ac_single'
         axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AC011: self.$route.params.kw } }).then(function (response) {
           console.log(response.data)
           self.results = response.data
@@ -216,6 +280,9 @@ export default {
       }
     },
     format_date (d) {
+      if (d === '99991231') {
+        return '未定'
+      }
       const tempDate = d - 19110000
       let year = null
       let month = null
