@@ -17,6 +17,9 @@
       :current-page="currentPage"
       small
     ></b-table>
+
+    <i class="fas fa-spinner fa-spin"></i>
+
   </div>
 </template>
 
