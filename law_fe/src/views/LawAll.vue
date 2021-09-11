@@ -8,6 +8,9 @@
   .char-3{
     padding-left: 6em;
   }
+  .char-4{
+    padding-left: 9em;
+  }
   .ac008 {
     background-color:#C00;border-radius:5px;padding:3px;color:white;
   }
@@ -104,19 +107,19 @@
         <div class="row">
           <div class="col">
           <b-button variant="btn btn-second-tqe mr-4" @click="query_law_ac()">所有條文</b-button>
-          <b-button variant="btn btn-second-tqe mr-4" @click="query_law_ab()">編章節</b-button>
+          <b-button variant="btn btn-second-tqe mr-4" @click="query_law_ab()" v-if="AB_COUNT >0">編章節</b-button>
           </div>
         </div>
       </div>
       <!-- 底部身資料 預設 -->
       <b-card class="mb-4 law-reg" v-if="OP_TYPE == ''">
           <b-card-text v-for="(item,key) in results" :key="key">
-            <div class="row mb-2" :class="setChapterClass(item.AB005)" v-if="item.AB005.length>0">
-              <div class="col text-left fs-4">
+            <div class="row mb-1" :class="setChapterClass(item.AB005)" v-if="item.AB005.length>0">
+              <div class="col text-left fs-4" style="font-weight:bold">
               {{item.AB005}}&nbsp;&nbsp;
               </div>
             </div>
-            <div class="row">
+            <div class="row" v-if="item.AC010 != undefined && item.AC010 != ''">
               <div class="col col-2 text-right fs-5">{{item.AC010}}</div>
               <div class="col text-left fs-5"><pre>{{item.AC011}}</pre></div>
             </div>
@@ -124,11 +127,11 @@
       </b-card>
       <!-- 底部身資料 點選編章節 -->
       <b-card class="mb-4 law-reg" v-if="OP_TYPE == '編章節'">
-          <a :href="'https://law.moj.gov.tw/LawClass/LawAllPara.aspx?pcode=' + this.$route.params.AA002" target="_blank">官網</a>
+          <!-- <a :href="'https://law.moj.gov.tw/LawClass/LawAllPara.aspx?pcode=' + this.$route.params.AA002" target="_blank">官網</a> -->
           <b-card-text v-for="(item,key) in AB_LIST" :key="key">
             <div class="row ml-4">
               <div class="col text-left fs-4">
-              <pre><b-link href="javascript:void(0)" style="text-decoration:none" @click="query_detail_by_AB003(item.AB003,item.hasDetail,item.numStart,item.numEnd)">{{item.AB003}} -- {{item.AB005}} § {{item.numStart}}</b-link></pre>
+              <pre><b-link href="javascript:void(0)" style="text-decoration:none" @click="query_detail_by_AB003(item.AB003)">{{item.AB005}} § {{item.numStart}}</b-link></pre>
               </div>
             </div>
           </b-card-text>
@@ -157,6 +160,12 @@
           <div class="row">
             <div class="col col-md-2 text-right">法規類別：</div>
             <div class="col text-left">{{AA006}}</div>
+          </div>
+          <div class="row">
+            <div class="col">
+            <b-button variant="btn btn-second-tqe mr-4" @click="query_law_ac()">所有條文</b-button>
+            <b-button variant="btn btn-second-tqe mr-4" @click="query_law_ab()" v-if="AB_COUNT >0">編章節</b-button>
+            </div>
           </div>
         </div>
       </div>
@@ -191,6 +200,7 @@ export default {
       TYPE: '',
       OP_TYPE: '',
       AB_LIST: [],
+      AB_COUNT: 0,
       AA002: '',
       AA004: '',
       AA006: '',
@@ -206,6 +216,8 @@ export default {
         return 'char-2'
       } else if (AB005.includes('節')) {
         return 'char-3'
+      } else if (AB005.includes('款')) {
+        return 'char-4'
       }
     },
     search_query () {
@@ -240,14 +252,16 @@ export default {
     query_law_ac () {
       const self = this
       self.OP_TYPE = ''
+      // self.$router.push({ name: 'LawAll', params: { AA002: self.AA002, kw: self.txtkw, TYPE: 'head' } })
+      self.TYPE = self.$route.params.TYPE
       self.query_detail()
     },
-    query_detail_by_AB003 (AB003, hasDetail, numStart, numEnd) {
+    query_detail_by_AB003 (AB003) {
       const self = this
       self.OP_TYPE = ''
       self.isLoading = true
       const apiName = 'query_detail_by_AB003'
-      axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AB003, hasDetail, numStart, numEnd } }).then(function (response) {
+      axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AB003 } }).then(function (response) {
         console.log(response.data)
         self.results = response.data
         setTimeout(() => {
@@ -259,23 +273,34 @@ export default {
       const self = this
       self.results = []
       self.isLoading = true
+      const apiName2 = 'query_law_ab_count'
       if (self.$route.params.TYPE === 'head') {
         const apiName = 'query_law_ac_all'
         axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AC011: self.$route.params.kw } }).then(function (response) {
           console.log(response.data)
           self.results = response.data
+          return axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName2, AA002: self.AA002 } })
+        }).then(function (response) {
+          console.log(response.data)
+          self.AB_COUNT = response.data[0].cnt
           setTimeout(() => {
             self.isLoading = false
-          }, 500)
+            self.isResultDone = true
+          }, 200)
         })
       } else if (self.$route.params.TYPE === 'body') {
         const apiName = 'query_law_ac_single'
         axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AC011: self.$route.params.kw } }).then(function (response) {
           console.log(response.data)
           self.results = response.data
+          return axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName2, AA002: self.AA002 } })
+        }).then(function (response) {
+          console.log(response.data)
+          self.AB_COUNT = response.data[0].cnt
           setTimeout(() => {
             self.isLoading = false
-          }, 500)
+            self.isResultDone = true
+          }, 200)
         })
       }
     },
