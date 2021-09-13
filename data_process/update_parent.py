@@ -8,11 +8,7 @@ maxdb = mysql.connector.connect(
   password = "0000",
   database = "law_test",
   )
-cursor=maxdb.cursor()
- # Read
-#cursor.execute("SELECT * FROM `lawab_test` where AB002='B0000001'")
-cursor.execute("SELECT * FROM `LAWAB` ORDER BY AB002,AB003")
-result = cursor.fetchall()
+
 
 
 LEVEL_1_ID = '0' #編
@@ -72,30 +68,43 @@ def get_parent_key(word):
     elif word =="目":
         return LEVEL_4_ID  #款    
 
-for row in result:
-    AB002 = row[1]
-    AB003 = row[2]
-    AB005 = row[4]    
-    #if AB005.find("第二章之一") > 0:
-    #    print("AA")
+cursor=maxdb.cursor()
+ # Read
+#cursor.execute("SELECT * FROM `lawab_test` where AB002='B0000001'")
+cursor.execute("SELECT DISTINCT AB002 FROM `LAWAB` ORDER BY AB002;")
+RESULT_1 = cursor.fetchall()
+for row_1 in RESULT_1:
+    LEVEL_1_ID = '0' #編
+    LEVEL_2_ID = '0' #章
+    LEVEL_3_ID = '0' #節
+    LEVEL_4_ID = '0' #款
+    LEVEL_5_ID = '0' #目    
+    cursor.execute("SELECT * FROM `LAWAB` WHERE AB002='" +row_1[0] + "' ORDER BY AB002,AB003;")
+    RESULT_2 = cursor.fetchall()
+    for row_2 in RESULT_2:
+        AB002 = row_2[1]
+        AB003 = row_2[2]
+        AB005 = row_2[4]    
+        #if AB005.find("第二章之一") > 0:
+        #    print("AA")
 
-    if AB002 in EXCLUDE_NO:
-        continue
+        if AB002 in EXCLUDE_NO:
+            continue
 
 
-    now_key_word = get_key_word(AB005.lstrip())
-    set_key_id(AB003,now_key_word)
-    parent_key = get_parent_key(now_key_word)      
-    
-    #update_users = "UPDATE LAWAB_TEST SET AB006 = "  + str(parent_key) + " WHERE AB002='" + str(AB002) + "' AND AB003='" + str(AB003) + "';" 
-    update_users = "UPDATE LAWAB SET AB006 =%s WHERE AB002=%s AND AB003=%s;" 
-    #print(update_users)
-    #LIST_SQL.append(update_users)
-    #LIST_SQL.append(str(AB005) + "\t" + str(AB003) + "\t" + str(parent_key) + "\n")
-    if str(parent_key) == '0':
-        parent_key = None
-    cursor.execute(update_users,(parent_key,str(AB002),str(AB003)))
-    maxdb.commit()    
+        now_key_word = get_key_word(AB005.lstrip())
+        set_key_id(AB003,now_key_word)
+        parent_key = get_parent_key(now_key_word)      
+        
+        #update_users = "UPDATE LAWAB_TEST SET AB006 = "  + str(parent_key) + " WHERE AB002='" + str(AB002) + "' AND AB003='" + str(AB003) + "';" 
+        update_users = "UPDATE LAWAB SET AB006 =%s WHERE AB002=%s AND AB003=%s;" 
+        #print(update_users)
+        #LIST_SQL.append(update_users)
+        #LIST_SQL.append(str(AB005) + "\t" + str(AB003) + "\t" + str(parent_key) + "\n")
+        if str(parent_key) == '0':
+            parent_key = None
+        cursor.execute(update_users,(parent_key,str(AB002),str(AB003)))
+        maxdb.commit()    
     #print(AB005,AB003,parent_key)    
 
 
