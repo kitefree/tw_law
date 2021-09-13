@@ -279,18 +279,8 @@ export default {
     // 點擊編章節 內的法規內容
     query_detail_by_AB003 (AB003) {
       const self = this
-      self.OP_TYPE = '所有條文'
       self.isLoading = true
-      // query: { kw: self.txtkw }
       self.$router.push({ name: 'LawAll', params: { AA002: self.AA002, kw: self.txtkw, SEARCH_TYPE: '法規名稱', OP_TYPE: '編章節編號', AB003 } })
-      // const apiName = 'query_detail_by_AB003'
-      // axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AB003 } }).then(function (response) {
-      //   console.log(response.data)
-      //   self.results = response.data
-      //   setTimeout(() => {
-      //     self.isLoading = false
-      //   }, 500)
-      // })
     },
     // 法規單身查詢
     query_detail () {
@@ -332,10 +322,10 @@ export default {
           const apiName = 'query_detail_by_AB003'
           axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AB003: self.AB003 } }).then(function (response) {
             console.log(response.data)
-            self.results = response.data
-            setTimeout(() => {
-              self.isLoading = false
-            }, 500)
+            // self.results = response.data
+            // setTimeout(() => {
+            //   self.isLoading = false
+            // }, 500)
           })
         }
       // [法條內容]類別點擊進來的
