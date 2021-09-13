@@ -134,7 +134,7 @@
           <b-card-text v-for="(item,key) in AB_LIST" :key="key">
             <div class="row ml-4">
               <div class="col text-left fs-4">
-              <pre><b-link href="javascript:void(0)" style="text-decoration:none" @click="query_detail_by_AB003(item.AB003)">{{item.AB005}} § {{item.numStart}}</b-link></pre>
+              <pre><b-link href="javascript:void(0)" style="text-decoration:none;color:#057b7b" @click="query_detail_by_AB003(item.AB003)">{{item.AB005}} § {{item.numStart}}</b-link></pre>
               </div>
             </div>
           </b-card-text>
