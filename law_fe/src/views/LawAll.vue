@@ -113,6 +113,9 @@
       </div>
       <!-- 底部身資料 預設 -->
       <b-card class="mb-4 law-reg" v-if="OP_TYPE == '所有條文'">
+          <div class="row" style="justify-content:center">
+            <div class="col col-8 text-left fs-2">{{AA014}}</div>
+          </div>
           <b-card-text v-for="(item,key) in results" :key="key">
             <div class="row mb-1" :class="setChapterClass(item.AB005)" v-if="item.AB005.length>0">
               <div class="col text-left fs-4" style="font-weight:bold">
@@ -220,6 +223,7 @@ export default {
       AA007: '',
       AA008: '',
       AA009: '',
+      AA014: '',
       AA015: ''
     }
   },
@@ -247,6 +251,7 @@ export default {
         self.AA007 = res[0].AA007
         self.AA008 = res[0].AA008
         self.AA009 = res[0].AA009
+        self.AA014 = res[0].AA014
       })
     },
     // 點擊編章節按鈕事件
@@ -322,10 +327,10 @@ export default {
           const apiName = 'query_detail_by_AB003'
           axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AB003: self.AB003 } }).then(function (response) {
             console.log(response.data)
-            // self.results = response.data
-            // setTimeout(() => {
-            //   self.isLoading = false
-            // }, 500)
+            self.results = response.data
+            setTimeout(() => {
+              self.isLoading = false
+            }, 500)
           })
         }
       // [法條內容]類別點擊進來的
