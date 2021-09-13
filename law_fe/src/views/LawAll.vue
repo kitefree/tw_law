@@ -112,7 +112,7 @@
         </div>
       </div>
       <!-- 底部身資料 預設 -->
-      <b-card class="mb-4 law-reg" v-if="OP_TYPE == 'default'">
+      <b-card class="mb-4 law-reg" v-if="OP_TYPE == '所有條文'">
           <b-card-text v-for="(item,key) in results" :key="key">
             <div class="row mb-1" :class="setChapterClass(item.AB005)" v-if="item.AB005.length>0">
               <div class="col text-left fs-4" style="font-weight:bold">
@@ -136,7 +136,20 @@
             </div>
           </b-card-text>
       </b-card>
-
+      <!-- 底部身資料 點選編章節編號 -->
+      <b-card class="mb-4 law-reg" v-if="OP_TYPE == '編章節編號'">
+          <b-card-text v-for="(item,key) in results" :key="key">
+            <div class="row mb-1" :class="setChapterClass(item.AB005)" v-if="item.AB005.length>0">
+              <div class="col text-left fs-4" style="font-weight:bold">
+              {{item.AB005}}&nbsp;&nbsp;
+              </div>
+            </div>
+            <div class="row" v-if="item.AC010 != undefined && item.AC010 != ''">
+              <div class="col col-2 text-right fs-5">{{item.AC010}}</div>
+              <div class="col text-left fs-5"><pre>{{item.AC011}}</pre></div>
+            </div>
+          </b-card-text>
+      </b-card>
     </div>
     <!-- 條文檢索結果 -->
     <div class="container mt-3" v-else-if="SEARCH_TYPE == '法條內容'">
@@ -244,47 +257,40 @@ export default {
       self.OP_TYPE = '編章節'
       self.isLoading = true
       self.$router.push({ name: 'LawAll', params: { AA002: self.AA002, kw: self.txtkw, SEARCH_TYPE: '法規名稱', OP_TYPE: self.OP_TYPE } })
-      // const apiName = 'query_law_ab'
-      // axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: this.$route.params.AA002 } }).then(function (response) {
-      //   console.log(response.data)
-      //   self.AB_LIST = response.data
-      //   setTimeout(() => {
-      //     self.isLoading = false
-      //   }, 500)
-      // })
     },
     // 點擊所有條文按鈕事件
     query_law_ac () {
       const self = this
 
-      if (self.SEARCH_TYPE === '法規名稱' && self.OP_TYPE === 'default') {
+      if (self.SEARCH_TYPE === '法規名稱' && self.OP_TYPE === '所有條文') {
         return
       }
       // 由法條內容分類串過來的，這時如果再點擊所有條文按鈕，要回到看整篇法規的模式
       if (self.SEARCH_TYPE === '法規名稱') {
         self.isLoading = true
-        self.$router.push({ name: 'LawAll', params: { AA002: self.AA002, kw: self.txtkw, SEARCH_TYPE: '法規名稱', OP_TYPE: 'default' } })
+        self.$router.push({ name: 'LawAll', params: { AA002: self.AA002, kw: self.txtkw, SEARCH_TYPE: '法規名稱', OP_TYPE: '所有條文' } })
       } else if (self.SEARCH_TYPE === '法條內容') {
         self.isLoading = true
-        self.$router.push({ name: 'LawAll', params: { AA002: self.AA002, kw: self.txtkw, SEARCH_TYPE: '法規名稱', OP_TYPE: 'default' } })
+        self.$router.push({ name: 'LawAll', params: { AA002: self.AA002, kw: self.txtkw, SEARCH_TYPE: '法規名稱', OP_TYPE: '所有條文' } })
       }
       // eslint-disable-next-line no-debugger
       // debugger
     },
-    // 點擊編章節 內的流規內容
+    // 點擊編章節 內的法規內容
     query_detail_by_AB003 (AB003) {
       const self = this
-      self.OP_TYPE = 'default'
+      self.OP_TYPE = '所有條文'
       self.isLoading = true
-      self.$router.push({ name: 'LawAll', params: { AA002: self.AA002, kw: self.txtkw, SEARCH_TYPE: '法規名稱', OP_TYPE: self.OP_TYPE } })
-      const apiName = 'query_detail_by_AB003'
-      axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AB003 } }).then(function (response) {
-        console.log(response.data)
-        self.results = response.data
-        setTimeout(() => {
-          self.isLoading = false
-        }, 500)
-      })
+      // query: { kw: self.txtkw }
+      self.$router.push({ name: 'LawAll', params: { AA002: self.AA002, kw: self.txtkw, SEARCH_TYPE: '法規名稱', OP_TYPE: '編章節編號', AB003 } })
+      // const apiName = 'query_detail_by_AB003'
+      // axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AB003 } }).then(function (response) {
+      //   console.log(response.data)
+      //   self.results = response.data
+      //   setTimeout(() => {
+      //     self.isLoading = false
+      //   }, 500)
+      // })
     },
     // 法規單身查詢
     query_detail () {
@@ -293,47 +299,53 @@ export default {
       self.isLoading = true
       const apiName2 = 'query_law_ab_count'
 
+      // 確認 法規表 筆數, 使用v-if 方式決定是否show 編章節按鈕
+      axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName2, AA002: self.AA002 } }).then(function (response) {
+        self.AB_COUNT = response.data[0].cnt
+      })
+
       // [法規名稱]類別點擊進來的
       if (self.$route.params.SEARCH_TYPE === '法規名稱') {
+        console.log('OP_TYPE:', self.OP_TYPE)
+        console.log('AB003:', self.AB003)
+
         // 預設查詢所有[法條內容]
-        const apiName = 'query_law_ac_all'
-        axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AC011: self.$route.params.kw } }).then(function (response) {
-          console.log(response.data)
-          self.results = response.data
-          return axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName2, AA002: self.AA002 } })
-        }).then(function (response) {
-          // 確認 法規表 筆數, 使用v-if 方式決定是否show 編章節按鈕
-          self.AB_COUNT = response.data[0].cnt
-          if (self.OP_TYPE === '編章節') {
-            const apiName = 'query_law_ab'
-            axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002 } }).then(function (response) {
-              self.AB_LIST = response.data
-              setTimeout(() => {
-                self.isLoading = false
-                self.isResultDone = true
-              }, 200)
-            })
-          } else {
+        if (self.OP_TYPE === '所有條文') {
+          const apiName = 'query_law_ac_all'
+          axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AC011: self.$route.params.kw } }).then(function (response) {
+            self.results = response.data
             setTimeout(() => {
               self.isLoading = false
               self.isResultDone = true
             }, 200)
-          }
-        })
+          })
+        } else if (self.OP_TYPE === '編章節') {
+          const apiName = 'query_law_ab'
+          axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002 } }).then(function (response) {
+            self.AB_LIST = response.data
+            setTimeout(() => {
+              self.isLoading = false
+              self.isResultDone = true
+            }, 200)
+          })
+        } else if (self.OP_TYPE === '編章節編號') {
+          const apiName = 'query_detail_by_AB003'
+          axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AB003: self.AB003 } }).then(function (response) {
+            console.log(response.data)
+            self.results = response.data
+            setTimeout(() => {
+              self.isLoading = false
+            }, 500)
+          })
+        }
       // [法條內容]類別點擊進來的
       } else if (self.$route.params.SEARCH_TYPE === '法條內容') {
         // 只查含有關鍵字的[法條內容]
         const apiName = 'query_law_ac_single'
         axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AC011: self.$route.params.kw } }).then(function (response) {
           self.results = response.data
-          return axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName2, AA002: self.AA002 } })
-        }).then(function (response) {
-          // 確認 法規表 筆數, 使用v-if 方式決定是否show 編章節按鈕
-          self.AB_COUNT = response.data[0].cnt
-          setTimeout(() => {
-            self.isLoading = false
-            self.isResultDone = true
-          }, 200)
+          self.isLoading = false
+          self.isResultDone = true
         })
       }
     },
@@ -364,6 +376,7 @@ export default {
   mounted () {
     const self = this
     self.AA002 = self.$route.params.AA002
+    self.AB003 = self.$route.params.AB003
     self.txtkw = self.$route.params.kw
     self.SEARCH_TYPE = self.$route.params.SEARCH_TYPE
     self.OP_TYPE = self.$route.params.OP_TYPE
