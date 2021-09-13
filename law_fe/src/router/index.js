@@ -11,7 +11,7 @@ const routes = [
     component: Home
   },
   {
-    path: '/LawAll/:AA002/:kw/:TYPE',
+    path: '/LawAll/:AA002/:kw/:SEARCH_TYPE/:OP_TYPE',
     name: 'LawAll',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -30,6 +30,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
+  mode: 'history',
   routes
 })
 

@@ -78,7 +78,7 @@
     </div>
     </div>
     <!-- 所有條文 -->
-    <div class="container mt-3" v-if="TYPE == 'head'">
+    <div class="container mt-3" v-if="SEARCH_TYPE == 'head'">
       <div class="text-left fs-3">
         所有條文
       </div>
@@ -139,7 +139,7 @@
 
     </div>
     <!-- 條文檢索結果 -->
-    <div class="container mt-3" v-else-if="TYPE == 'body'">
+    <div class="container mt-3" v-else-if="SEARCH_TYPE == 'body'">
       <div class="text-left fs-3">
         條文檢索結果
       </div>
@@ -197,7 +197,7 @@ export default {
       isLoading: false,
       results: [],
       baseURL: GLOBAL.baseURL,
-      TYPE: '',
+      SEARCH_TYPE: '',
       OP_TYPE: '',
       AB_LIST: [],
       AB_COUNT: 0,
@@ -252,9 +252,13 @@ export default {
     query_law_ac () {
       const self = this
       self.OP_TYPE = ''
-      // self.$router.push({ name: 'LawAll', params: { AA002: self.AA002, kw: self.txtkw, TYPE: 'head' } })
-      self.TYPE = self.$route.params.TYPE
-      self.query_detail()
+      // eslint-disable-next-line no-debugger
+      // debugger
+      self.$router.push({ name: 'LawAll', params: { AA002: self.AA002, kw: self.txtkw, SEARCH_TYPE: 'head', OP_TYPE: self.OP_TYPE } })
+
+      // self.$router.go(0)
+      // self.SEARCH_TYPE = self.$route.params.SEARCH_TYPE
+      // self.query_detail()
     },
     query_detail_by_AB003 (AB003) {
       const self = this
@@ -274,7 +278,7 @@ export default {
       self.results = []
       self.isLoading = true
       const apiName2 = 'query_law_ab_count'
-      if (self.$route.params.TYPE === 'head') {
+      if (self.$route.params.SEARCH_TYPE === 'head') {
         const apiName = 'query_law_ac_all'
         axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AC011: self.$route.params.kw } }).then(function (response) {
           console.log(response.data)
@@ -288,7 +292,7 @@ export default {
             self.isResultDone = true
           }, 200)
         })
-      } else if (self.$route.params.TYPE === 'body') {
+      } else if (self.$route.params.SEARCH_TYPE === 'body') {
         const apiName = 'query_law_ac_single'
         axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: apiName, AA002: self.AA002, AC011: self.$route.params.kw } }).then(function (response) {
           console.log(response.data)
@@ -332,7 +336,8 @@ export default {
     const self = this
     self.AA002 = self.$route.params.AA002
     self.txtkw = self.$route.params.kw
-    self.TYPE = self.$route.params.TYPE
+    self.SEARCH_TYPE = self.$route.params.SEARCH_TYPE
+    self.OP_TYPE = self.$route.params.OP_TYPE
     self.isLoading = true
     self.query_head()
     self.query_detail()

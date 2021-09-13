@@ -57,7 +57,7 @@
               </template>
               <!-- A virtual composite column -->
               <template #cell(content)="data" label-align="left">
-                <a href="javascript:void(0)" class="text-decoration-none"  @click="query_detail(data.item.AA002,data.item.TYPE)">
+                <a href="javascript:void(0)" class="text-decoration-none"  @click="query_detail(data.item.AA002,data.item.SEARCH_TYPE)">
                   <span v-html="replace_key_word(data.item.AA004)"></span> ({{format_date(data.item.AA007)}})
                 </a>
               </template>
@@ -90,7 +90,7 @@
               </template>
               <!-- A virtual composite column -->
               <template #cell(content)="data" label-align="left">
-              <a href="javascript:void(0)" class="text-decoration-none text-left"  @click="query_detail(data.item.AC003,data.item.TYPE)">
+              <a href="javascript:void(0)" class="text-decoration-none text-left"  @click="query_detail(data.item.AC003,data.item.SEARCH_TYPE)">
                 <span class="ac008" v-if="data.item.AC008=='廢'">{{data.item.AC008}}</span>
                 {{data.item.AC006}} ({{format_date(data.item.AC007)}})
               </a>
@@ -241,10 +241,10 @@ export default {
         }, 200)
       })
     },
-    query_detail (AC003, TYPE) {
+    query_detail (AC003, SEARCH_TYPE) {
       const self = this
       self.isLoading = true
-      this.$router.push({ name: 'LawAll', params: { AA002: AC003, kw: self.txtkw, TYPE: TYPE } })
+      this.$router.push({ name: 'LawAll', params: { AA002: AC003, kw: self.txtkw, SEARCH_TYPE: SEARCH_TYPE, OP_TYPE: '' } })
     },
     format_date (d) {
       if (d === '99991231') {
