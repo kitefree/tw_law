@@ -43,7 +43,7 @@ def get_key_word(word):
     elif re.search('\u7b2c\s.+\s\u6b3e', word) != None:
         return "款"        
     elif re.match('\u7b2c\s.+\s\u76ee', word) != None:
-        return "目" 
+        return "目"
 
 
 def set_key_id(AB003,now_key_word):
