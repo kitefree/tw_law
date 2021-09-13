@@ -227,12 +227,10 @@ export default {
       self.AA_currentPage = 1
       self.AC_currentPage = 1
       axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: 'search_query_AA', txtkw: self.txtkw } }).then(function (response) {
-        console.log(response.data)
         self.AA_results = response.data
         self.AA_rows = self.AA_results.length
         return axios.get(`${GLOBAL.baseURL}/api.php`, { params: { api: 'search_query_AC', txtkw: self.txtkw } })
       }).then(function (response) {
-        console.log(response.data)
         self.AC_results = response.data
         self.AC_rows = self.AC_results.length
         setTimeout(() => {
@@ -245,7 +243,7 @@ export default {
       const self = this
       self.isLoading = true
       // 法規編號,關鍵字,搜尋分類,操作類型
-      this.$router.push({ name: 'LawAll', params: { AA002: AC003, kw: self.txtkw, SEARCH_TYPE: SEARCH_TYPE, OP_TYPE: 'default' } })
+      this.$router.push({ name: 'LawAll', params: { AA002: AC003, kw: self.txtkw, SEARCH_TYPE: SEARCH_TYPE, OP_TYPE: '所有條文' } })
     },
     format_date (d) {
       if (d === '99991231') {
