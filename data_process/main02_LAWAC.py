@@ -2,13 +2,10 @@ import xml.etree.ElementTree as ET
 import pathlib
 import os
 from LAWAC_Model import LAWAC_Model
-
+import config
 
 #https://stackoverflow.com/questions/15748528/python-how-to-determine-hierarchy-level-of-parsed-xml-elements
 
-
-CUR_DIR = str(pathlib.Path(__file__).parent.resolve())
-FILE_NAME = 'MingLing.xml'
 
 NODE_LIST = []
 NODE_IDX = 1
@@ -39,7 +36,7 @@ def print_level(elem,level):
         NODE_LIST.append('-'*level+elem.tag)       
     #print('-'*level+elem.tag)
 
-root = ET.parse(CUR_DIR + '\\' + FILE_NAME)
+root = ET.parse(config.MAIN02['INPUT_FILE_NAME'])
 perf_func(root.getroot(), print_level)
 
 
@@ -136,7 +133,7 @@ for nodes_01 in root.getroot():
 
 
 #寫檔
-fp = open(CUR_DIR + "\\中文法規_命令資料_編章節_LAWAC_SQL.txt", "w", encoding = 'utf8')
+fp = open(config.MAIN02['OUTPUT_FILE_NAME_AC'], "w", encoding = 'utf8')
  
 # 將 lines 所有內容寫入到檔案
 fp.writelines(LIST_SQL)
