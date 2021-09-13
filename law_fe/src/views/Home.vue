@@ -244,7 +244,8 @@ export default {
     query_detail (AC003, SEARCH_TYPE) {
       const self = this
       self.isLoading = true
-      this.$router.push({ name: 'LawAll', params: { AA002: AC003, kw: self.txtkw, SEARCH_TYPE: SEARCH_TYPE, OP_TYPE: '' } })
+      // 法規編號,關鍵字,搜尋分類,操作類型
+      this.$router.push({ name: 'LawAll', params: { AA002: AC003, kw: self.txtkw, SEARCH_TYPE: SEARCH_TYPE, OP_TYPE: 'default' } })
     },
     format_date (d) {
       if (d === '99991231') {
