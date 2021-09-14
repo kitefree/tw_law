@@ -8,6 +8,8 @@ import config
 
 NODE_LIST = []
 NODE_IDX = 1
+LIST_SQL = []
+SNO = 1
 
 def re_print_tag(ll,deep=False):
     global NODE_IDX,NODE_LIST
@@ -38,42 +40,12 @@ def print_level(elem,level):
 root = ET.parse(config.MAIN02['INPUT_FILE_NAME'])
 perf_func(root.getroot(), print_level)
 
-
-
-LIST_SQL = []
 lawab_model = LAWAB_Model()
 
-# # test code
-# for nodes_01 in root.getroot():
-#     for nodes_02 in nodes_01:
-#         if nodes_02.tag == '法規性質' or nodes_02.tag == '法規名稱':
-#             print(nodes_02.tag,":",nodes_02.text)
-#             LIST_SQL.append(nodes_02.tag+":"+nodes_02.text + '\n')
-#         elif nodes_02.tag == '法規內容':
-#             for nodes_03 in nodes_02:            
-#                 if nodes_03.tag =='編章節':
-#                     print(nodes_03.text)
-#                     LIST_SQL.append(nodes_03.tag+':'+nodes_03.text + '\n')
-                    
-#             LIST_SQL.append('\n')
-#             print(nodes_02.tag,":",nodes_02.text)
-
-# #寫檔
-# fp = open(CUR_DIR + "\\中文法規_法律資料_編章節_LAWAB_SQL_test.txt", "w", encoding = 'utf8')
- 
-# # # 將 lines 所有內容寫入到檔案
-# # lines = ["One\n", "Two\n", "Three\n", "Four\n", "Five\n"]
-# fp.writelines(LIST_SQL)
- 
-# # # 關閉檔案
-# fp.close()
-
-# exit
-
-SNO = 1
 for nodes_01 in root.getroot():
     lawab_model.reset_all_attr() 
     for nodes_02 in nodes_01:
+        #第一層
         if nodes_02.tag == '法規網址':
             pcode_val = nodes_02.text[-8:]
             lawab_model.set_val_by_tagname('pcode',pcode_val)
@@ -82,6 +54,7 @@ for nodes_01 in root.getroot():
         elif nodes_02.tag == '法規內容':
             SNO = 1
             for nodes_03 in nodes_02:
+                #第二層
                 if nodes_03.tag =='編章節':
                     lawab_model.set_val_by_tagname('sno',SNO)
                     lawab_model.set_val_by_tagname(nodes_03.tag,nodes_03.text)

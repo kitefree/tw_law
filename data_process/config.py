@@ -1,7 +1,7 @@
 import pathlib
 import os
 CUR_DIR = str(pathlib.Path(__file__).parent.resolve())
-INPUT_FILE_ROOT_PATH = 'input_file'
+INPUT_FILE_ROOT_PATH = 'input_file\\20210819'
 OUTPUT_FILE_ROOT_PATH = 'output_file'
 # 法律資料
 MAIN01 = {

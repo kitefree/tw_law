@@ -9,6 +9,8 @@ import config
 
 NODE_LIST = []
 NODE_IDX = 1
+LIST_SQL = []
+AB003_ID = 0
 
 def re_print_tag(ll,deep=False):
     global NODE_IDX,NODE_LIST
@@ -40,63 +42,12 @@ root = ET.parse(config.MAIN02['INPUT_FILE_NAME'])
 perf_func(root.getroot(), print_level)
 
 
-
-LIST_SQL = []
-AB003_ID = 0
 lawac_model = LAWAC_Model()
 
-# test code
-# for nodes_01 in root.getroot():
-#     for nodes_02 in nodes_01:
-#         if nodes_02.tag == '法規性質' or nodes_02.tag == '法規名稱':
-#             print(nodes_02.tag,":",nodes_02.text)
-#             LIST_SQL.append(nodes_02.tag+":"+nodes_02.text + '\n')
-#         elif nodes_02.tag == '法規網址':
-#             pcode_val = nodes_02.text[-8:]
-#             LIST_SQL.append('pcode' + ':' + pcode_val + '\n')
-#         elif nodes_02.tag == '法規內容':
-#             tmp_AC006 = '' #編章節
-#             for nodes_03 in nodes_02:                
-#                 if nodes_03.tag =='編章節':
-#                     tmp_AC006 = nodes_03.text        
-#                     LIST_SQL.append(nodes_03.tag+':'+nodes_03.text + '\n')
-#                 elif nodes_03.tag =='條文':
-#                     for nodes_04 in nodes_03:
-#                         if nodes_04.tag == '條號':
-#                             LIST_SQL.append(nodes_04.tag+':'+nodes_04.text + '\n')
-                    
-#             LIST_SQL.append('\n')
-            
-
-# #寫檔
-# fp = open(CUR_DIR + "\\中文法規_法律資料_編章節_LAWAC_SQL_test.txt", "w", encoding = 'utf8')
-
-# # # 將 lines 所有內容寫入到檔案
-# # lines = ["One\n", "Two\n", "Three\n", "Four\n", "Five\n"]
-# fp.writelines(LIST_SQL)
- 
-# # # 關閉檔案
-# fp.close()
-
-# exit
-
-
-
-
-# LAWAC
-# AC001 AA001 ID refkey
-# AC002 AA002 代號(pcode) refkey 
-# AC003 AB003 ID refkey 
-# AC004 SELF ID(flno) 
-# AC005 法規名稱 AA004 法規名稱 refkey
-# AC006 AB005 編章節(編、章、節、款、目)    refkey
-# AC007 條號
-# AC008 條文內容
-    
-
-for nodes_01 in root.getroot():
-    lawac_model.reset_all_attr()    
+for nodes_01 in root.getroot():    
+    lawac_model.reset_all_attr()
     for nodes_02 in nodes_01:
+        #第一層
         if nodes_02.tag == '法規網址':
             pcode_val = nodes_02.text[-8:]
             lawac_model.set_val_by_tagname('pcode',pcode_val)
@@ -110,7 +61,8 @@ for nodes_01 in root.getroot():
             AB003_ID = 0
             lawac_model.set_val_by_tagname('AB003_ID',AB003_ID)
 
-            for nodes_03 in nodes_02:                
+            for nodes_03 in nodes_02:      
+                #第二層          
                 if nodes_03.tag =='編章節':
                     AB003_ID = AB003_ID + 1
                     lawac_model.set_val_by_tagname(nodes_03.tag,nodes_03.text)
@@ -118,6 +70,7 @@ for nodes_01 in root.getroot():
                     
                 elif nodes_03.tag =='條文':
                     for nodes_04 in nodes_03:
+                        #第三層
                         if nodes_04.tag == '條號':
                             AC005 = nodes_04.text.replace('第','').replace('條','').strip()                            
                             lawac_model.set_val_by_tagname('flno',AC005)
