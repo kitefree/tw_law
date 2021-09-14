@@ -274,37 +274,6 @@ function query_detail_by_AB003(){
     $link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);    
     $where = " ";
 
-    // $sql = "
-    // SELECT AA003,AA004
-    // ,AB002,AB003
-    // ,AB005
-    // ,AC006
-    // ,AC010
-    // ,AC011
-    // FROM LAWAA 
-    // LEFT JOIN LAWAB ON AA002 = AB002
-    // LEFT JOIN LAWAC ON AC003 = AA002
-    // WHERE AA002='{$AA002}' AND AB003='{$AB003}' $where
-    // ORDER BY AB003
-    // ,CAST(SUBSTRING_INDEX(AC005,'-', 1) AS UNSIGNED) ASC
-    // ,CASE WHEN LOCATE('-',AC005) >0 THEN CAST(SUBSTRING_INDEX(AC005,'-', -1) AS UNSIGNED) ELSE 0 END ASC";    
-
-    // $sql = "
-    // SELECT AA003,AA004
-    // ,AB002,AB003
-    // ,AB005
-    // ,AC006
-    // ,AC010
-    // ,AC011
-    // FROM LAWAA 
-    // LEFT JOIN LAWAB ON AA002 = AB002
-    // LEFT JOIN LAWAC ON AC003 = AB002 AND AC004 = AB003
-    // WHERE AA002='{$AA002}' AND ( AB003='{$AB003}' or AB006='{$AB003}')  $where
-    // ORDER BY AB003
-    // ,CAST(SUBSTRING_INDEX(AC005,'-', 1) AS UNSIGNED) ASC
-    // ,CASE WHEN LOCATE('-',AC005) >0 THEN CAST(SUBSTRING_INDEX(AC005,'-', -1) AS UNSIGNED) ELSE 0 END ASC";   
-
-
     $sql = "
     with tmp_ab as (
         SELECT * FROM LAWAB where AB002='{$AA002}' AND FIND_IN_SET(AB003,get_child_list_ab('{$AB003}','{$AA002}'))
