@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import pathlib
 import os
+from pathlib import Path
 from LAWAC_Model import LAWAC_Model
 import config
 
@@ -82,7 +83,8 @@ for nodes_01 in root.getroot():
                     LIST_SQL.append('\n')        
                         
             
-
+# 建立資料夾
+Path(config.CUR_DIR + "\\" + config.OUTPUT_FILE_ROOT_PATH).mkdir(parents=True, exist_ok=True)
 
 
 #寫檔

@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import pathlib
 import os
+from pathlib import Path
 from LAWAB_Model import LAWAB_Model
 import config
 
@@ -61,7 +62,9 @@ for nodes_01 in root.getroot():
                     LIST_SQL.append(lawab_model.get_insert_sql())
                     SNO = SNO + 1
     
-    
+
+# 建立資料夾
+Path(config.CUR_DIR + "\\" + config.OUTPUT_FILE_ROOT_PATH).mkdir(parents=True, exist_ok=True)
 
 
 #寫檔

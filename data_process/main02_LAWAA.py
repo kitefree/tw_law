@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import pathlib
 import os
+from pathlib import Path
 from LAWAA_Model import LAWAA_Model
 import config
 
@@ -56,6 +57,8 @@ for nodes_01 in root.getroot():
     
     LIST_SQL.append(lawaa_model.get_insert_sql())
 
+# 建立資料夾
+Path(config.CUR_DIR + "\\" + config.OUTPUT_FILE_ROOT_PATH).mkdir(parents=True, exist_ok=True)
 
 #寫檔
 fp = open(config.MAIN02['OUTPUT_FILE_NAME_AA'], "w", encoding = 'utf8')

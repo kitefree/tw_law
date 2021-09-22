@@ -1,9 +1,9 @@
 import xml.etree.ElementTree as ET
 import pathlib
 import os
-import config
+from pathlib import Path
 from LAWAB_Model import LAWAB_Model
-
+import config
 
 #https://stackoverflow.com/questions/15748528/python-how-to-determine-hierarchy-level-of-parsed-xml-elements
 
@@ -62,7 +62,8 @@ for nodes_01 in root.getroot():
                     SNO = SNO + 1
     
     
-
+# 建立資料夾
+Path(config.CUR_DIR + "\\" + config.OUTPUT_FILE_ROOT_PATH).mkdir(parents=True, exist_ok=True)
 
 #寫檔
 fp = open(config.MAIN01['OUTPUT_FILE_NAME_AB'], "w", encoding = 'utf8')
