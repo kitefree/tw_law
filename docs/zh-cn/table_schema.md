@@ -48,11 +48,11 @@ LAWAC 條文-單身
 AC001 SELF ID PK KEY
 AC002 AA001 ID refkey
 AC003 AA002 代號(pcode) refkey 
-AC004 AB003 ID sno 
+AC004 AB003 ID sno refkey
 AC005 SELF ID(flno) 
-AC006 法規名稱 AA004 法規名稱 refkey
-AC007 AA007	最新異動日期
-AC008 AA010	廢止註記 
+AC006 AA004 法規名稱 refkey
+AC007 AA007 最新異動日期 refkey
+AC008 AA010	廢止註記 refkey
 AC009 AB005 編章節(編、章、節、款、目)    refkey
 AC010 條號
 AC011 條文內容

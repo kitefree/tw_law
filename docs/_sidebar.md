@@ -12,5 +12,5 @@
     * [db_init](/zh-cn/db_init.md)
 * 程式
   * [程式開發Memo](/zh-cn/code_exp_memo.md)
-* 流程
-  * 待寫
+* 專案建置
+  * [環境與流程](/zh-cn/setup.md)

@@ -21,7 +21,7 @@
 
 * 前言擺在所有法條的最前面:heavy_check_mark:
 
-![image-20210910173041153](.\全國法規筆記.assets\image-20210910173041153-16312662434521.png)
+![image-20210910173041153](../images/image-20210910173041153-16312662434521.png)
 
 * 沒有編章節的法規要把button hide :heavy_check_mark:
 

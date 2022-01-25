@@ -1,5 +1,8 @@
-
 # DB Init
+
+## Database
+
+建立`law`資料夾，collate(定序) 請選擇支援`utf8`格式，比如`utf8_bin`格式
 
 ## Table
 
@@ -7,10 +10,10 @@
 
 ```sql
 --
--- 資料表結構 `lawaa`
+-- 資料表結構 `LAWAA`
 --
 
-CREATE TABLE `lawaa` (
+CREATE TABLE `LAWAA` (
   `AA001` int(11) NOT NULL COMMENT 'SELF ID',
   `AA002` char(50) NOT NULL COMMENT 'pcode',
   `AA003` char(255) NOT NULL COMMENT '法規性質',
@@ -34,9 +37,9 @@ CREATE TABLE `lawaa` (
 --
 
 --
--- 資料表索引 `lawaa`
+-- 資料表索引 `LAWAA`
 --
-ALTER TABLE `lawaa`
+ALTER TABLE `LAWAA`
   ADD PRIMARY KEY (`AA001`),
   ADD KEY `idx_AA002` (`AA002`);
 
@@ -45,9 +48,9 @@ ALTER TABLE `lawaa`
 --
 
 --
--- 使用資料表自動遞增(AUTO_INCREMENT) `lawaa`
+-- 使用資料表自動遞增(AUTO_INCREMENT) `LAWAA`
 --
-ALTER TABLE `lawaa`
+ALTER TABLE `LAWAA`
   MODIFY `AA001` int(11) NOT NULL AUTO_INCREMENT COMMENT 'SELF ID', AUTO_INCREMENT=1;
 COMMIT;
 ```
@@ -56,10 +59,10 @@ COMMIT;
 
 ```sql
 --
--- 資料表結構 `lawab`
+-- 資料表結構 `LAWAB`
 --
 
-CREATE TABLE `lawab` (
+CREATE TABLE `LAWAB` (
   `AB001` int(11) NOT NULL COMMENT 'AA001 ID refkey',
   `AB002` char(50) NOT NULL COMMENT 'AA002 代號(pcode) refkey',
   `AB003` smallint(6) NOT NULL COMMENT 'SELF ID',
@@ -74,9 +77,9 @@ CREATE TABLE `lawab` (
 --
 
 --
--- 資料表索引 `lawab`
+-- 資料表索引 `LAWAB`
 --
-ALTER TABLE `lawab`
+ALTER TABLE `LAWAB`
   ADD PRIMARY KEY (`AB001`,`AB002`,`AB003`) USING BTREE,
   ADD KEY `idx_AB002` (`AB002`) USING BTREE;
 COMMIT;
@@ -85,12 +88,12 @@ COMMIT;
 ### LAWAC
 
 ```sql
-CREATE TABLE `lawac` (
+CREATE TABLE `LAWAC` (
   `AC001` int(11) NOT NULL,
   `AC002` int(11) NOT NULL COMMENT 'AA001 ID refkey',
   `AC003` char(50) NOT NULL COMMENT 'AA002 代號(pcode) refkey',
   `AC004` smallint(6) DEFAULT NULL COMMENT 'AB003 ID refkey ',
-  `AC005` char(5) NOT NULL COMMENT 'SELF ID flno',
+  `AC005` char(10) NOT NULL COMMENT 'SELF ID flno',
   `AC006` char(150) NOT NULL COMMENT 'AA004 法規名稱 refkey',
   `AC007` char(255) NOT NULL COMMENT '最新異動日期',
   `AC008` char(255) NOT NULL COMMENT '廢止註記',
@@ -100,21 +103,21 @@ CREATE TABLE `lawac` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- 資料表索引 `lawac`
+-- 資料表索引 `LAWAC`
 --
-ALTER TABLE `lawac`
+ALTER TABLE `LAWAC`
   ADD PRIMARY KEY (`AC001`),
   ADD KEY `idx_AC003` (`AC003`);
-ALTER TABLE `lawac` ADD FULLTEXT KEY `fulltext_AC008` (`AC008`);
+ALTER TABLE `LAWAC` ADD FULLTEXT KEY `fulltext_AC008` (`AC008`);
 
 --
 -- 在傾印的資料表使用自動遞增(AUTO_INCREMENT)
 --
 
 --
--- 使用資料表自動遞增(AUTO_INCREMENT) `lawac`
+-- 使用資料表自動遞增(AUTO_INCREMENT) `LAWAC`
 --
-ALTER TABLE `lawac`
+ALTER TABLE `LAWAC`
   MODIFY `AC001` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 COMMIT;
 ```
