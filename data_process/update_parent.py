@@ -5,7 +5,7 @@ import mysql.connector
 
 maxdb = mysql.connector.connect(
   host = "127.0.0.1",
-  user = "root",
+  user = "kite",
   password = "0000",
   database = "law",
   )

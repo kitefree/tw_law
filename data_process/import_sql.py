@@ -5,6 +5,6 @@ FILE_LISTS = ['main01_LAWAA','main01_LAWAB','main01_LAWAC','main02_LAWAA','main0
 for file in FILE_LISTS:    
     print("start ..." + file)
     fp = os.path.abspath("output_file/" + file + "_SQL.sql")
-    check_output("C:/xampp/mysql/bin/mysql -uroot -p0000 --default-character-set=utf8 law < " + fp, shell=True)
+    check_output("mysql -ukite -p0000 --default-character-set=utf8 law < " + fp, shell=True)
     print("finish\r\n")
     
