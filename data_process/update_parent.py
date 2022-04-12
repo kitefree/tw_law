@@ -2,12 +2,13 @@ import re
 import pathlib
 import os
 import mysql.connector
+import config
 
 maxdb = mysql.connector.connect(
   host = "127.0.0.1",
-  user = "kite",
-  password = "0000",
-  database = "law",
+  user = config.DB_ACCOUNT,
+  password = config.DB_PWD,
+  database = config.DB_NAME,
   )
 
 

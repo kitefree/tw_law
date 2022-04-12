@@ -64,7 +64,7 @@ for nodes_01 in root.getroot():
     
 
 # 建立資料夾
-Path(config.CUR_DIR + "\\" + config.OUTPUT_FILE_ROOT_PATH).mkdir(parents=True, exist_ok=True)
+Path(config.CUR_DIR + "/" + config.OUTPUT_FILE_ROOT_PATH).mkdir(parents=True, exist_ok=True)
 
 
 #寫檔

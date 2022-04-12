@@ -82,7 +82,7 @@ for nodes_01 in root.getroot():
                     LIST_SQL.append('\n')        
                         
 # 建立資料夾
-Path(config.CUR_DIR + "\\" + config.OUTPUT_FILE_ROOT_PATH).mkdir(parents=True, exist_ok=True)
+Path(config.CUR_DIR + "/" + config.OUTPUT_FILE_ROOT_PATH).mkdir(parents=True, exist_ok=True)
 
 #寫檔
 fp = open(config.MAIN01['OUTPUT_FILE_NAME_AC'], "w", encoding = 'utf8')
