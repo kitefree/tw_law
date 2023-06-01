@@ -2,12 +2,12 @@ import pathlib
 import os
 
 CUR_DIR = str(pathlib.Path(__file__).parent.resolve())
-INPUT_FILE_ROOT_PATH = 'input_file/20220411'
-OUTPUT_FILE_ROOT_PATH = 'output_file'
+INPUT_FILE_ROOT_PATH = 'input_file/20230515'
+OUTPUT_FILE_ROOT_PATH = 'output_file/20230515'
 
 DB_ACCOUNT = 'tqe'
 DB_PWD = '0000'
-DB_NAME = 'law'
+DB_NAME = 'law_test'
 
 # 法律資料
 MAIN01 = {
